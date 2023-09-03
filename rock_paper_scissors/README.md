@@ -2,6 +2,10 @@
 
 A new Flutter project.
 
+<p align="center">
+  <img width="400" alt="스크린샷 2023-09-03 오후 10 31 05" src="https://github.com/hangunhee39/flutter_study/assets/77563098/318a0b27-f5a9-4624-953c-7822838bfe6e">
+  <figcaption align="center">3개 이미지 띄우기</figcaption>
+</p>
 <img width="400" alt="스크린샷 2023-09-03 오후 10 31 05" src="https://github.com/hangunhee39/flutter_study/assets/77563098/318a0b27-f5a9-4624-953c-7822838bfe6e">
 
 
