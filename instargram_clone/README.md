@@ -1,6 +1,14 @@
 # instargram_clone
 
-A new Flutter project.
+Instagram ui clone 코딩
+-GradView
+-TextField
+-AppBar 숨기기
+
+<p align="center">
+  <img width="339" alt="스크린샷 2023-09-05 오전 12 22 46" src="https://github.com/hangunhee39/flutter_study/assets/77563098/3a73c986-20ff-4e00-96b4-fbcf308e8528">
+  <img width="343" alt="스크린샷 2023-09-05 오전 12 22 55" src="https://github.com/hangunhee39/flutter_study/assets/77563098/6045c836-6f3b-4732-a6b4-7268fa7ab116">
+</p>
 
 ## Getting Started
 
