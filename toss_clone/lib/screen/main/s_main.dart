@@ -15,14 +15,22 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => MainScreenState();
 }
 
-class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin, AfterLayoutMixin {
+class MainScreenState extends State<MainScreen>
+    with SingleTickerProviderStateMixin, AfterLayoutMixin {
   TabItem _currentTab = TabItem.home;
-  final tabs = [TabItem.home, TabItem.favorite];
+  final tabs = [
+    TabItem.home,
+    TabItem.benefit,
+    TabItem.tosspay,
+    TabItem.stock,
+    TabItem.all
+  ];
   final List<GlobalKey<NavigatorState>> navigatorKeys = [];
 
   int get _currentIndex => tabs.indexOf(_currentTab);
 
-  GlobalKey<NavigatorState> get _currentTabNavigationKey => navigatorKeys[_currentIndex];
+  GlobalKey<NavigatorState> get _currentTabNavigationKey =>
+      navigatorKeys[_currentIndex];
 
   bool get extendBody => true;
 
@@ -31,7 +39,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   //splah 화면 죽이기 (AfterLayoutMixin 상속?)
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) {
-    delay((){
+    delay(() {
       FlutterNativeSplash.remove();
     }, 1500.ms);
   }
@@ -44,6 +52,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
+    //fragment backButton 사용 (_handleBackPressed)
     return WillPopScope(
       onWillPop: _handleBackPressed,
       child: Scaffold(
@@ -51,7 +60,8 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
         drawer: const MenuDrawer(),
         body: Container(
           color: context.appColors.seedColor.getMaterialColorValues[200],
-          padding: EdgeInsets.only(bottom: extendBody ? 60 - bottomNavigationBarBorderRadius : 0),
+          padding: EdgeInsets.only(
+              bottom: extendBody ? 60 - bottomNavigationBarBorderRadius : 0),
           child: SafeArea(
             bottom: !extendBody,
             child: pages,
@@ -74,6 +84,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
               ))
           .toList());
 
+  //Fragment 에서 Back Button
   Future<bool> _handleBackPressed() async {
     final isFirstRouteInCurrentTab =
         (await _currentTabNavigationKey.currentState?.maybePop() == false);
@@ -130,13 +141,15 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     });
   }
 
-  BottomNavigationBarItem bottomItem(
-      bool activate, IconData iconData, IconData inActivateIconData, String label) {
+  BottomNavigationBarItem bottomItem(bool activate, IconData iconData,
+      IconData inActivateIconData, String label) {
     return BottomNavigationBarItem(
         icon: Icon(
           key: ValueKey(label),
           activate ? iconData : inActivateIconData,
-          color: activate ? context.appColors.iconButton : context.appColors.iconButtonInactivate,
+          color: activate
+              ? context.appColors.iconButton
+              : context.appColors.iconButtonInactivate,
         ),
         label: label);
   }
