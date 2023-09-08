@@ -13,22 +13,25 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: CustomScrollView(
-        slivers: [
-          const SliverAppBar(
-            title: Text("알림"),
-            centerTitle: false,
-          ),
-          SliverList(
-              delegate: SliverChildBuilderDelegate(
-                  childCount: notificationDunnies.length,
-                  (context, index) => NotificationItemWidget(
-                      onTap: () {
-                        NotificationDialog([notificationDunnies[index]]).show();
-                      },
-                      notification: notificationDunnies[index])))
-        ],
+    return SafeArea(
+      child: Material(
+        //CustomScrollView 사용이유 : 여러 스크롤뷰를 통합
+        child: CustomScrollView(
+          slivers: [
+            const SliverAppBar(
+              title: Text("알림"),
+              centerTitle: false,
+            ),
+            SliverList(
+                delegate: SliverChildBuilderDelegate(
+                    childCount: notificationDunnies.length,
+                    (context, index) => NotificationItemWidget(
+                        onTap: () {
+                          NotificationDialog([notificationDunnies[index]]).show();
+                        },
+                        notification: notificationDunnies[index])))
+          ],
+        ),
       ),
     );
   }
