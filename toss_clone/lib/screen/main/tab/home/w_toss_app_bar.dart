@@ -1,5 +1,6 @@
 import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/common/dart/extension/context_extension.dart';
+import 'package:fast_app_base/screen/notification/s_notification.dart';
 import 'package:flutter/material.dart';
 
 class TossAppBar extends StatefulWidget {
@@ -32,7 +33,9 @@ class _TossAppBarState extends State<TossAppBar> {
           ),
           width10,
           Tap(
-            onTap: () => setState(() => _showRedDot = !_showRedDot),
+            onTap: (){
+              Nav.push(NotificationScreen());
+            },
             child: Stack(children: [
               Image.asset(
                 '$basePath/icon/notification.png',
