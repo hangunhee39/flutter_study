@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'f_my_stock.dart';
 import 'f_todays_discovery.dart';
+import 'search/s_search_stock.dart';
 
 class StockFragment extends StatefulWidget {
   const StockFragment({super.key});
@@ -36,7 +37,7 @@ class _StockFragmentState extends State<StockFragment>
             ),
             ImageButton(
               onTap: () {
-                context.showSnackbar("search");
+                Nav.push(const SearchStockScreen());
               },
               imagePath: '$basePath/icon/stock_search.png',
               height: 26,
