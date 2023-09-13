@@ -1,5 +1,6 @@
 import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/common/widget/w_image_button.dart';
+import 'package:fast_app_base/screen/main/tab/stock/setting/s_setting.dart';
 import 'package:flutter/material.dart';
 
 import 'f_my_stock.dart';
@@ -45,7 +46,7 @@ class _StockFragmentState extends State<StockFragment>
             ),
             ImageButton(
               onTap: () {
-                context.showSnackbar("setting");
+                Nav.push(SettingScreen());
               },
               imagePath: '$basePath/icon/stock_settings.png',
               height: 26,
