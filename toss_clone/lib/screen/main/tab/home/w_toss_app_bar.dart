@@ -13,6 +13,7 @@ class TossAppBar extends StatefulWidget {
 
 class _TossAppBarState extends State<TossAppBar> {
   bool _showRedDot = false;
+  int _tappingCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -22,44 +23,63 @@ class _TossAppBarState extends State<TossAppBar> {
       child: Row(
         children: [
           width10, //가로 여백 주기
-          Image.asset(
-            '$basePath/icon/toss.png',
-            height: 30,
-          ),
+          // AnimatedContainer( //animate widget (암시적 애니메이션)
+          //   duration: 1000.ms,
+          //   curve: Curves.easeIn,
+          //   height: _tappingCount > 2 ? 60 : 30,
+          //   child: Image.asset(
+          //     '$basePath/icon/toss.png',
+          //   ),
+          // ),
+          AnimatedCrossFade(
+              firstChild: Image.asset(
+                  '$basePath/icon/toss.png'),
+              secondChild: Image.asset(
+                  '$basePath/icon/map_point.png',
+                  height: 30),
+              crossFadeState: _tappingCount <2 ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+              duration: 1500.ms),
           Expanded(child: Container()),
-          Image.asset(
-            '$basePath/icon/map_point.png',
-            height: 30,
+          Tap(
+            onTap: () {
+              setState(() {
+                _tappingCount ++;
+              });
+            },
+            child: Image.asset(
+              '$basePath/icon/map_point.png',
+              height: 30,
+            ),
           ),
           width10,
           Tap(
-            onTap: () {
-              Nav.push(NotificationScreen());
-            },
-            child: Stack(children: [
-              Image.asset(
-                '$basePath/icon/notification.png',
-                height: 30,
-              ),
-              if (_showRedDot)
-                Positioned.fill(
-                    child: Align(
-                  alignment: Alignment.topRight,
-                  child: Container(
-                    width: 6,
-                    height: 6,
-                    decoration: const BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.red),
-                  ),
-                ))
-            ])
-                .animate(onComplete: (controller)=>controller.repeat()) //애니메이션 반복하기
-                .shake(duration: 2100.ms, hz: 3)  //흔들기
-                .then().fadeOut(duration: 1000.ms)  //흔들고 사라지기,
+              onTap: () {
+                Nav.push(NotificationScreen());
+              },
+              child: Stack(children: [
+                Image.asset(
+                  '$basePath/icon/notification.png',
+                  height: 30,
+                ),
+                if (_showRedDot)
+                  Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          width: 6,
+                          height: 6,
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.red),
+                        ),
+                      ))
+              ])
+                  .animate(
+                  onComplete: (controller) => controller.repeat()) //애니메이션 반복하기
+                  .shake(duration: 2100.ms, hz: 3) //흔들기
+                  .then().fadeOut(duration: 1000.ms) //흔들고 사라지기,
           ),
           width10
         ],
-      ),
-    );
+      ),);
   }
 }
