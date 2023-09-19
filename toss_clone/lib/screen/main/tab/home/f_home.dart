@@ -5,6 +5,7 @@ import 'package:fast_app_base/screen/dialog/d_message.dart';
 import 'package:fast_app_base/screen/main/s_main.dart';
 import 'package:fast_app_base/screen/main/tab/home/bank_accounts_dummy.dart';
 import 'package:fast_app_base/screen/main/tab/home/w_bank_account.dart';
+import 'package:fast_app_base/screen/main/tab/home/w_rive_like_button.dart';
 import 'package:flutter/material.dart';
 import 'package:live_background/live_background.dart';
 import 'package:live_background/widget/live_background_widget.dart';
@@ -13,10 +14,17 @@ import '../../../dialog/d_color_bottom.dart';
 import '../../../dialog/d_confirm.dart';
 import 'w_toss_app_bar.dart';
 
-class HomeFragment extends StatelessWidget {
+class HomeFragment extends StatefulWidget {
   const HomeFragment({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<HomeFragment> createState() => _HomeFragmentState();
+}
+
+class _HomeFragmentState extends State<HomeFragment> {
+  bool isLike = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +47,11 @@ class HomeFragment extends StatelessWidget {
               padding: const EdgeInsets.only(top: TossAppBar.appBarHeight ,bottom: MainScreenState.bottomNavHeight),
               child: Column(
                 children: [
+                   SizedBox(height: 250,width: 250,child: RiveLikeButton(isLike,onTapLike: (isLike){
+                     setState(() {
+                       this.isLike = isLike;
+                     });
+                   }),),
                   BigButton("토스뱅크", onTap: () {
                     context.showSnackbar("토스뱅크 클릭");
                   }),
