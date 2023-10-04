@@ -12,6 +12,7 @@ import 'package:live_background/widget/live_background_widget.dart';
 
 import '../../../dialog/d_color_bottom.dart';
 import '../../../dialog/d_confirm.dart';
+import 's_number.dart';
 import 'w_toss_app_bar.dart';
 
 class HomeFragment extends StatefulWidget {
@@ -52,8 +53,8 @@ class _HomeFragmentState extends State<HomeFragment> {
                        this.isLike = isLike;
                      });
                    }),),
-                  BigButton("토스뱅크", onTap: () {
-                    context.showSnackbar("토스뱅크 클릭");
+                  BigButton("토스뱅크", onTap: () async {
+                    final result = await Nav.push(NumberScreen());
                   }),
                   height5,
                   RoundedContainer(child: Column(

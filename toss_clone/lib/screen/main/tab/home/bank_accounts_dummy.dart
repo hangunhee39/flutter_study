@@ -22,6 +22,10 @@ final List<BankAccount> bankAccounts = [
   bankAccountToss
 ];
 
+main(){
+
+}
+
 //Map : key 값이 필요할 때 , 중복 x
 
 //Set : 포함되어 있는지 확인 , 중복 x
