@@ -6,16 +6,16 @@ import 'package:fast_app_base/data/memory/vo_todo.dart';
 import 'package:fast_app_base/screen/main/tab/todo/w_fire.dart';
 import 'package:flutter/material.dart';
 
-class TodoStatusWidget extends StatelessWidget {
+class TodoStatusWidget extends StatelessWidget with TodoDataProvider{
   final Todo todo;
 
-  const TodoStatusWidget(this.todo, {super.key});
+  TodoStatusWidget(this.todo, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Tap(
       onTap: () {
-        TodoDataHolder.of(context).changeTodoStatus(todo);
+        todoData.changeTodoStatus(todo);
       },
       child: SizedBox(
           width: 50,
@@ -27,11 +27,11 @@ class TodoStatusWidget extends StatelessWidget {
                 fillColor:
                     MaterialStateProperty.all(context.appColors.checkBoxColor),
               ),
-            TodoStatus.incomplete => Checkbox(
+            TodoStatus.incomplete => const Checkbox(
                 value: false,
                 onChanged: null,
               ),
-            TodoStatus.ongoing => Fire()
+            TodoStatus.ongoing => const Fire()
           }),
     );
   }

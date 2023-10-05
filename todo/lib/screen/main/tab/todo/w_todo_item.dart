@@ -8,16 +8,16 @@ import 'package:flutter/material.dart';
 
 import 'w_todo_status.dart';
 
-class TodoItem extends StatelessWidget {
+class TodoItem extends StatelessWidget with TodoDataProvider {
   final Todo todo;
 
-  const TodoItem(this.todo, {super.key});
+  TodoItem(this.todo, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Dismissible( //swap 로 item 사라지게
       onDismissed: (direction){
-        TodoDataHolder.of(context).removeTodo(todo);
+        todoData.removeTodo(todo);
       },
       //기본적으로는 그냥 secondaryBG 가 있으면 오른쪽으로 밀었을 때
       background: RoundedContainer(
@@ -62,7 +62,7 @@ class TodoItem extends StatelessWidget {
                 Expanded(child: todo.title.text.size(20).medium.make()),
                 IconButton(
                     onPressed: () async {
-                      TodoDataHolder.of(context).editTodo(todo);
+                      todoData.editTodo(todo);
                     },
                     icon: const Icon(EvaIcons.editOutline))
               ],

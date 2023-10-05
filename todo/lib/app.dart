@@ -1,9 +1,9 @@
 import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/common/theme/custom_theme_app.dart';
 import 'package:fast_app_base/data/memory/todo_data_holder.dart';
-import 'package:fast_app_base/data/memory/todo_data_notifier.dart';
 import 'package:fast_app_base/screen/main/s_main.dart';
 import 'package:flutter/material.dart';
+import 'package:get/instance_manager.dart';
 
 import 'common/theme/custom_theme.dart';
 
@@ -28,18 +28,19 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
   GlobalKey<NavigatorState> get navigatorKey => App.navigatorKey;
 
   //state Management 를 사용 안할때 방법 2
-  final notifier = TodoDataNotifier();
+  //final notifier = TodoDataNotifier();
 
   @override
   void initState() {
     super.initState();
+    Get.put(TodoDataHolder());  //getX 주입
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    notifier.dispose();
+    //notifier.dispose();
     super.dispose();
   }
 
@@ -47,17 +48,14 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return CustomThemeApp(
       child: Builder(builder: (context) {
-        return TodoDataHolder(  //State Manger
-          notifier: notifier,
-          child: MaterialApp(
-            navigatorKey: App.navigatorKey,
-            localizationsDelegates: context.localizationDelegates,
-            supportedLocales: context.supportedLocales,
-            locale: context.locale,
-            title: 'Image Finder',
-            theme: context.themeType.themeData,
-            home: const MainScreen(),
-          ),
+        return MaterialApp(
+          navigatorKey: App.navigatorKey,
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+          title: 'Image Finder',
+          theme: context.themeType.themeData,
+          home: const MainScreen(),
         );
       }),
     );

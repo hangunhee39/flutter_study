@@ -1,6 +1,5 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:fast_app_base/data/memory/todo_data_holder.dart';
-import 'package:fast_app_base/data/memory/vo_todo.dart';
 import 'package:fast_app_base/screen/main/tab/tab_item.dart';
 import 'package:fast_app_base/screen/main/tab/tab_navigator.dart';
 import 'package:fast_app_base/screen/main/wrute/d_write_todo.dart';
@@ -17,7 +16,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class MainScreenState extends State<MainScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, TodoDataProvider {
   TabItem _currentTab = TabItem.home;
   final tabs = [TabItem.home, TabItem.favorite];
   final List<GlobalKey<NavigatorState>> navigatorKeys = [];
@@ -56,17 +55,7 @@ class MainScreenState extends State<MainScreen>
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            final result = await WriteTodoDialog().show();
-            if (result != null && mounted) {
-              TodoDataHolder
-                  .of(context)
-                  .notifier
-                  .addTodo(Todo(id: DateTime
-                  .now()
-                  .millisecondsSinceEpoch,
-                title: result.text,
-                dueDate: result.dateTime,));
-            }
+            todoData.addTodo();
           },
           child: const Icon(EvaIcons.plus),
         ),
@@ -75,23 +64,21 @@ class MainScreenState extends State<MainScreen>
     );
   }
 
-  IndexedStack get pages =>
-      IndexedStack(
-          index: _currentIndex,
-          children: tabs
-              .mapIndexed((tab, index) =>
-              Offstage(
+  IndexedStack get pages => IndexedStack(
+      index: _currentIndex,
+      children: tabs
+          .mapIndexed((tab, index) => Offstage(
                 offstage: _currentTab != tab,
                 child: TabNavigator(
                   navigatorKey: navigatorKeys[index],
                   tabItem: tab,
                 ),
               ))
-              .toList());
+          .toList());
 
   Future<bool> _handleBackPressed() async {
     final isFirstRouteInCurrentTab =
-    (await _currentTabNavigationKey.currentState?.maybePop() == false);
+        (await _currentTabNavigationKey.currentState?.maybePop() == false);
     if (isFirstRouteInCurrentTab) {
       if (_currentTab != TabItem.home) {
         _changeTab(tabs.indexOf(TabItem.home));
@@ -131,12 +118,11 @@ class MainScreenState extends State<MainScreen>
   List<BottomNavigationBarItem> navigationBarItems(BuildContext context) {
     return tabs
         .mapIndexed(
-          (tab, index) =>
-          tab.toNavigationBarItem(
+          (tab, index) => tab.toNavigationBarItem(
             context,
             isActivated: _currentIndex == index,
           ),
-    )
+        )
         .toList();
   }
 
@@ -152,8 +138,9 @@ class MainScreenState extends State<MainScreen>
         icon: Icon(
           key: ValueKey(label),
           activate ? iconData : inActivateIconData,
-          color: activate ? context.appColors.iconButton : context.appColors
-              .iconButtonInactivate,
+          color: activate
+              ? context.appColors.iconButton
+              : context.appColors.iconButtonInactivate,
         ),
         label: label);
   }
