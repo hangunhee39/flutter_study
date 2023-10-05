@@ -4,8 +4,8 @@ import 'package:fast_app_base/screen/main/tab/todo/f_todo.dart';
 import 'package:flutter/material.dart';
 
 enum TabItem {
-  home(Icons.event_note_outlined, 'ToDo', SearchFragment()),
-  favorite(Icons.search, 'Search',TodoFragment() );
+  home(Icons.event_note_outlined, 'ToDo', TodoFragment()),
+  favorite(Icons.search, 'Search',SearchFragment() );
 
   final IconData activeIcon;
   final IconData inActiveIcon;

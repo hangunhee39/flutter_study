@@ -45,4 +45,10 @@ abstract class AbstractThemeColors {
   Color get snackbarBgColor => AppColors.mediumBlue;
 
   Color get blueButtonBackground => AppColors.darkBlue;
+
+  Color get checkBoxColor => Color(0xff118243);
+
+  Color get itemBackground => Colors.white;
+
+  Color get removeTodoBg => const Color.fromARGB(255, 203, 50, 50);
 }
