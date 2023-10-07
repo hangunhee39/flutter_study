@@ -1,32 +1,24 @@
 import 'package:fast_app_base/data/memory/todo_status.dart';
 import 'package:fast_app_base/screen/dialog/d_confirm.dart';
 import 'package:fast_app_base/screen/main/wrute/d_write_todo.dart';
-import 'package:get/get.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'vo_todo.dart';
 
-class TodoDataHolder extends GetxController {
-  final RxList<Todo> todoList = <Todo>[].obs;
+//로그아웃 기능
+final userProvider = FutureProvider<String>((ref) => 'abc');
+//riverpod1 전역변수로 provider 생성
+final todoDataProvider = StateNotifierProvider<TodoDataHolder, List<Todo>>((ref) {
+  //provider 끼리 연결할 수 있음
+  final userId = ref.watch(userProvider);
+  debugPrint(userId.value);
+  return TodoDataHolder();
+});
 
-  /*------Inherited 방버 stateMangement X ---
-  const TodoDataHolder({
-    super.key,
-    required super.child,
-    required this.notifier,
-  });
+class TodoDataHolder extends StateNotifier<List<Todo>> {
 
-  @override
-  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
-    return true;
-  }
-
-  //위젯트리에 있는 모든곳에서 holder를 사용가능하게 : dependOnInheritedWigetOfExactType
-  static TodoDataHolder of(BuildContext context) {
-    TodoDataHolder inherited = (context.dependOnInheritedWidgetOfExactType<
-        TodoDataHolder>())!;
-    return inherited;
-  }
-   */
+  TodoDataHolder() :super([]);
 
   void changeTodoStatus(Todo todo) async {
     switch (todo.status) {
@@ -40,8 +32,8 @@ class TodoDataHolder extends GetxController {
           todo.status = TodoStatus.incomplete;
         });
     }
-    //notifier.notify();
-    todoList.refresh();
+    //State는 stateNotifierProveider의 제네릭
+    state = List.of(state); //리프레쉬 기능
   }
 
   void editTodo(Todo todo) async {
@@ -49,27 +41,31 @@ class TodoDataHolder extends GetxController {
     if (result != null) {
       todo.title = result.text;
       todo.dueDate = result.dateTime;
-      todoList.refresh();
+      state = List.of(state);
     }
   }
 
   void addTodo() async {
     final result = await WriteTodoDialog().show();
     if (result != null) {
-      todoList.add(Todo(
-        id: DateTime.now().millisecondsSinceEpoch,
+      state.add(Todo(
+        id: DateTime
+            .now()
+            .millisecondsSinceEpoch,
         title: result.text,
         dueDate: result.dateTime,
       ));
+
+      state = List.of(state);
     }
   }
 
   void removeTodo(Todo todo) {
-    todoList.remove(todo);
-    todoList.refresh();
+    state.remove(todo);
+    state =List.of(state);
   }
 }
 
-mixin class TodoDataProvider {
-  late final TodoDataHolder todoData = Get.find();
+extension TodoListHolderProverder on WidgetRef {
+  TodoDataHolder get readTodoHolder => read(todoDataProvider.notifier);
 }

@@ -2,21 +2,22 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:fast_app_base/data/memory/todo_data_holder.dart';
 import 'package:fast_app_base/screen/main/tab/tab_item.dart';
 import 'package:fast_app_base/screen/main/tab/tab_navigator.dart';
-import 'package:fast_app_base/screen/main/wrute/d_write_todo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/common.dart';
 import 'w_menu_drawer.dart';
 
-class MainScreen extends StatefulWidget {
+//riverpod3 State -> ConsumerState 로 바꾸기
+class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
 
   @override
-  State<MainScreen> createState() => MainScreenState();
+  ConsumerState<MainScreen> createState() => MainScreenState();
 }
 
-class MainScreenState extends State<MainScreen>
-    with SingleTickerProviderStateMixin, TodoDataProvider {
+class MainScreenState extends ConsumerState<MainScreen>
+    with SingleTickerProviderStateMixin {
   TabItem _currentTab = TabItem.home;
   final tabs = [TabItem.home, TabItem.favorite];
   final List<GlobalKey<NavigatorState>> navigatorKeys = [];
@@ -55,7 +56,8 @@ class MainScreenState extends State<MainScreen>
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            todoData.addTodo();
+            //riverpod4 main에서 holder 접근 하기
+            ref.readTodoHolder.addTodo();
           },
           child: const Icon(EvaIcons.plus),
         ),
