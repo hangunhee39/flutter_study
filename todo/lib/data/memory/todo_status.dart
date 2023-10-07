@@ -1,5 +1,5 @@
 enum TodoStatus{
   incomplete,
   ongoing,
-  complete,
+  complete
 }

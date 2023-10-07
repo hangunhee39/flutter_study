@@ -2,22 +2,22 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/common/dart/extension/datetime_extension.dart';
 import 'package:fast_app_base/common/widget/w_rounded_container.dart';
-import 'package:fast_app_base/data/memory/todo_data_holder.dart';
+import 'package:fast_app_base/data/memory/todo_cubit.dart';
 import 'package:fast_app_base/data/memory/vo_todo.dart';
 import 'package:flutter/material.dart';
 
 import 'w_todo_status.dart';
 
-class TodoItem extends StatelessWidget with TodoDataProvider {
+class TodoItem extends StatelessWidget {
   final Todo todo;
 
-  TodoItem(this.todo, {super.key});
+  const TodoItem(this.todo, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Dismissible( //swap 로 item 사라지게
       onDismissed: (direction){
-        todoData.removeTodo(todo);
+        context.readTodoCubit.removeTodo(todo);
       },
       //기본적으로는 그냥 secondaryBG 가 있으면 오른쪽으로 밀었을 때
       background: RoundedContainer(
@@ -62,7 +62,7 @@ class TodoItem extends StatelessWidget with TodoDataProvider {
                 Expanded(child: todo.title.text.size(20).medium.make()),
                 IconButton(
                     onPressed: () async {
-                      todoData.editTodo(todo);
+                      context.readTodoCubit.editTodo(todo);
                     },
                     icon: const Icon(EvaIcons.editOutline))
               ],
