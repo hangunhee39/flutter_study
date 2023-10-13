@@ -46,6 +46,7 @@ class AppPreferences {
           return _prefs.setStringList(key, value as List<String>);
         case "DateTime?":
           return _prefs.setString(key, (value as DateTime).toIso8601String());
+          //data class 추가: (json)String 파싱해서
         default:
           if (value is Enum) {
             return _prefs.setString(key, describeEnum(value));
