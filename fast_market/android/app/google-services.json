@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "999777722000",
+    "project_id": "fastcampus-flutter",
+    "storage_bucket": "fastcampus-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999777722000:android:69b1a26edc55beecc44215",
+        "android_client_info": {
+          "package_name": "com.hgh.fast_market"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999777722000-8540q53n4nifo0scpm6pt9t874lidki0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuBy0EDg4I9-Xa95kQnozq_27IHaV2_zs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999777722000-8540q53n4nifo0scpm6pt9t874lidki0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
