@@ -1,4 +1,11 @@
+import 'dart:typed_data';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fast_market/home/camera_example_page.dart';
+import 'package:fast_market/model/category.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProductAddScreen extends StatefulWidget {
   const ProductAddScreen({super.key});
@@ -12,6 +19,15 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
 
   bool isSale = false;
 
+  final db = FirebaseFirestore.instance;
+  final storage = FirebaseStorage.instance;
+
+  //image picker 사용
+  Uint8List? imageData; //image 8비트 저장
+  XFile? image; //image 저장
+
+  Category? selectedCategory;
+
   TextEditingController titleTEC = TextEditingController();
   TextEditingController descriptionTEC = TextEditingController();
   TextEditingController priceTEC = TextEditingController();
@@ -24,6 +40,11 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
       appBar: AppBar(
         title: const Text("상품 추가"),
         actions: [
+          IconButton(onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context){
+              return CameraExamplePage();
+            }));
+          }, icon: const Icon(Icons.camera)),
           IconButton(
               onPressed: () {}, icon: const Icon(Icons.batch_prediction)),
           IconButton(
@@ -38,22 +59,38 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Align(
-                alignment: Alignment.center,
-                child: Container(
-                  height: 240,
-                  width: 240,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200]!,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.add),
-                      Text("체품(상품) 이미지 추가"),
-                    ],
+              GestureDetector(
+
+                //imagePicker 사용
+                onTap: () async {
+                  final ImagePicker picker = ImagePicker();
+                  image = await picker.pickImage(source: ImageSource.gallery);
+                  imageData = await image?.readAsBytes();
+
+                  setState(() {
+
+                  });
+                },
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    height: 240,
+                    width: 240,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200]!,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: imageData == null ? const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.add),
+                        Text("체품(상품) 이미지 추가"),
+                      ],
+                    ) : Image.memory(
+                      imageData!,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -61,7 +98,10 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: Text(
                   "기본정보",
-                  style: Theme.of(context).textTheme.headlineSmall,
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .headlineSmall,
                 ),
               ),
               Form(
@@ -88,7 +128,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                     ),
                     TextFormField(
                       controller: descriptionTEC,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: "상품 설명",
                       ),
@@ -149,7 +189,7 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                           isSale = v;
                         });
                       },
-                      title: Text("할인여부"),
+                      title: const Text("할인여부"),
                     ),
                     if (isSale)
                       TextFormField(
@@ -171,10 +211,11 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                       child: Text(
                         "카테고리 선택",
                         style:
-                            TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                     ),
-                    DropdownButton(isExpanded: true,items: [], onChanged: (s){}),
+                    DropdownButton(
+                        isExpanded: true, items: const [], onChanged: (s) {}),
                     const SizedBox(
                       height: 16,
                     )

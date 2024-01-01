@@ -13,8 +13,15 @@ class _HomeWidgetState extends State<HomeWidget> {
   PageController pageController = PageController();
   int bannerIndex = 0;
 
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return SingleChildScrollView(
       child: Column(
         children: [

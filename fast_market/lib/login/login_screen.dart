@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -8,10 +11,41 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailTextController = TextEditingController();
   TextEditingController pwdTextController = TextEditingController();
+
+  //로그인 (firebase)
+  Future<UserCredential?> signIn(String email, String password) async {
+    try {
+      final credential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+
+      return credential;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "user-not-found") {
+        print("user-not-found");
+      } else if (e.code == "wrong-password") {
+        print("wrong-password");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  //:구글 로그인 (googleSign -> firebase) , android 는 디지털 지문 등록 필수 ./gradlew signingReport
+  Future<UserCredential?> signInWithGoogle() async{
+    //googleSign
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    //firebase 로그인
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +103,26 @@ class _LoginScreenState extends State<LoginScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: MaterialButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
 
+                      final result = await signIn(
+                        emailTextController.text.trim(),
+                        pwdTextController.text.trim(),
+                      );
+                      if (result==null) {
+                        //:비동기(async)일때는 context 쓸 때 mounted 인걸 체크 필요
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("로그인 실패")));
+                        }
+                        return;
+                      }
+                      //로그인 성공
+                      if (context.mounted) {
+                        context.go("/");
+                      }
+                    }
                   },
                   height: 48,
                   minWidth: double.infinity,
@@ -81,13 +133,28 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              TextButton(onPressed: () {
-
-              }, child: const Text("계정이 없나요? 회원가입")),
+              TextButton(
+                  onPressed: () => context.push("/sign_up"),
+                  child: const Text("계정이 없나요? 회원가입")),
               const Divider(),
               Padding(
                 padding: const EdgeInsets.only(left: 32, right: 32),
-                child: Image.asset("assets/btn_google_signin.png"),
+                //Img click 가능하게 Gesture 써도됨
+                child: InkWell(
+                  onTap: () async{
+                    final userCredit = await signInWithGoogle();
+
+                    if (userCredit == null) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("로그인 실패")));
+                      }
+                      return;
+                    }
+                    if (context.mounted) {
+                      context.go("/");
+                    }
+                  },
+                    child: Image.asset("assets/btn_google_signin.png")),
               )
             ],
           ),
